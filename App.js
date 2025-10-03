@@ -7,9 +7,12 @@ import {
   ScrollView, 
   TextInput, 
   StyleSheet,
-  SafeAreaView,
-  Dimensions
+  Dimensions,
+  KeyboardAvoidingView,
+  Platform
 } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+
 
 const { width } = Dimensions.get('window');
 
@@ -33,10 +36,17 @@ export default function GermanFlashcardApp() {
   };
 
   return (
+    <SafeAreaProvider>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
     <SafeAreaView style={styles.container}>
       {renderScreen()}
       <NavBar active={currentScreen} setCurrentScreen={setCurrentScreen} />
     </SafeAreaView>
+    </KeyboardAvoidingView>
+    </SafeAreaProvider>
   );
 }
 
