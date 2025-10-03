@@ -28,8 +28,8 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Generate app icons
-        run: npx react-native set-icon --path ./icon.png
+      # - name: Generate app icons
+      #   run: npx react-native set-icon --path ./icon.png
 
       - name: Bundle JS
         run: |
