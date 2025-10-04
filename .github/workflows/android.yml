@@ -13,6 +13,9 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # fetch all history
+          tags: true       # fetch tags
 
       - name: Cache Node modules
         uses: actions/cache@v3
