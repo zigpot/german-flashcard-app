@@ -46,9 +46,13 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      # - name: Generate app icons
+      #   run: npx react-native set-icon --path ./icon.png
+
       - name: Bundle JS
         run: |
           mkdir -p android/app/src/main/assets
+          export METRO_CACHE=$HOME/.metro-cache
           npx react-native bundle \
             --platform android \
             --dev false \
@@ -56,13 +60,30 @@ jobs:
             --bundle-output android/app/src/main/assets/index.android.bundle \
             --assets-dest android/app/src/main/res
 
+      - name: Determine version
+        id: version
+        run: |
+          TAG_NAME=$(git describe --tags --abbrev=0)
+          VERSION_CODE=$(date +'%y%m%d%H')
+          echo "VERSION_NAME=$TAG_NAME" >> $GITHUB_ENV
+          echo "VERSION_CODE=$VERSION_CODE" >> $GITHUB_ENV
+          echo "Version set: $TAG_NAME ($VERSION_CODE)"
+
       - name: Build APK
         working-directory: android
-        run: ./gradlew assembleRelease
+        run: |
+          ./gradlew assembleRelease \
+            -PversionCode=$VERSION_CODE \
+            -PversionName=$VERSION_NAME
+        env:
+          GRADLE_OPTS: "-Dorg.gradle.daemon=true -Dorg.gradle.parallel=true -Dorg.gradle.configureondemand=true"
 
       - name: Upload to GitHub Release
         uses: softprops/action-gh-release@v1
         with:
           files: android/app/build/outputs/apk/release/app-release.apk
+          name: app-${{ env.VERSION_NAME }}.apk
+          tag_name: ${{ env.VERSION_NAME }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
