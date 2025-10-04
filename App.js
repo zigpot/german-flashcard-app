@@ -13,6 +13,9 @@ import {
 } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
+// Force Roboto as default
+Text.defaultProps = Text.defaultProps || {};
+Text.defaultProps.style = { fontFamily: 'Roboto' };
 
 const { width } = Dimensions.get('window');
 
