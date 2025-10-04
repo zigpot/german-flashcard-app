@@ -420,7 +420,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   sentenceText: {
-    fontFamily: Nunito,
+    fontFamily: 'Nunito',
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',
@@ -460,7 +460,7 @@ const styles = StyleSheet.create({
     minHeight: 60,
   },
   wordText: {
-    fontFamily: Nunito,
+    fontFamily: 'Nunito',
     fontSize: 10,
     fontWeight: 'bold',
     color: '#FFFFFF',
