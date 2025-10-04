@@ -56,11 +56,11 @@ export default function GermanFlashcardApp() {
 // Front Screen Component
 function FrontScreen({ points, setCurrentScreen }) {
   const words = [
-    { word: 'TOMORROW', type: 'Adverb', color: '#F6AD55' },
-    { word: 'DRIVE', type: 'Verb', color: '#FC8181' },
-    { word: 'WE', type: 'Pronoun', color: '#63B3ED' },
-    { word: 'TO', type: 'Prep.', color: '#68D391' },
-    { word: 'BERLIN', type: 'Noun', color: '#FAF089' }
+    { word: 'Tomorrow', type: 'Adverb', color: '#F6AD55' },
+    { word: 'drive', type: 'Verb', color: '#FC8181' },
+    { word: 'we', type: 'Pronoun', color: '#63B3ED' },
+    { word: 'to', type: 'Prep.', color: '#68D391' },
+    { word: 'Berlin', type: 'Noun', color: '#FAF089' }
   ];
 
   return (
@@ -420,7 +420,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   sentenceText: {
-    fontFamily: 'Nunito',
+    fontFamily: 'Nunito-Bold',
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',
@@ -460,7 +460,7 @@ const styles = StyleSheet.create({
     minHeight: 60,
   },
   wordText: {
-    fontFamily: 'Nunito',
+    fontFamily: 'Nunito-Bold',
     fontSize: 10,
     fontWeight: 'bold',
     color: '#FFFFFF',
