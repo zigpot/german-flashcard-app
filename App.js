@@ -70,7 +70,7 @@ function FrontScreen({ points, setCurrentScreen }) {
 
       {/* Sentence */}
       <View style={styles.sentenceContainer}>
-        <Text style={styles.sentenceText}>TOMORROW WE DRIVE TO BERLIN.</Text>
+        <Text style={styles.sentenceText}>Tomorrow we drive to Berlin.</Text>
       </View>
 
       {/* Listen Button */}
@@ -417,6 +417,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   sentenceText: {
+    fontFamily: Nunito,
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',
@@ -456,6 +457,7 @@ const styles = StyleSheet.create({
     minHeight: 60,
   },
   wordText: {
+    fontFamily: Nunito,
     fontSize: 10,
     fontWeight: 'bold',
     color: '#FFFFFF',
