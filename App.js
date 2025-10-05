@@ -1,11 +1,10 @@
-// App.js - German Flashcard App for React Native
 import React, { useState } from 'react';
-import { 
-  View, 
-  Text, 
-  TouchableOpacity, 
-  ScrollView, 
-  TextInput, 
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  TextInput,
   StyleSheet,
   Dimensions,
   KeyboardAvoidingView,
@@ -13,28 +12,31 @@ import {
 } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
-// Force Roboto as default
-Text.defaultProps = Text.defaultProps || {};
-Text.defaultProps.style = { fontFamily: 'Roboto' };
-
 const { width } = Dimensions.get('window');
 
 // Main App Component
 export default function GermanFlashcardApp() {
-  const [currentScreen, setCurrentScreen] = useState('front');
+  const [currentScreen, setCurrentScreen] = useState('home');
   const [points, setPoints] = useState(150);
   const [level, setLevel] = useState(3);
+  const [currentCard, setCurrentCard] = useState('front');
 
   const renderScreen = () => {
     switch (currentScreen) {
-      case 'front':
-        return <FrontScreen points={points} setCurrentScreen={setCurrentScreen} />;
-      case 'back':
-        return <BackScreen level={level} setPoints={setPoints} points={points} setCurrentScreen={setCurrentScreen} />;
+      case 'home':
+        return <HomeScreen points={points} level={level} setCurrentScreen={setCurrentScreen} />;
+      case 'cards':
+        return <CardsScreen
+          currentCard={currentCard}
+          setCurrentCard={setCurrentCard}
+          level={level}
+          setPoints={setPoints}
+          points={points}
+        />;
       case 'achievements':
         return <AchievementsScreen setCurrentScreen={setCurrentScreen} />;
       default:
-        return <FrontScreen points={points} setCurrentScreen={setCurrentScreen} />;
+        return <HomeScreen points={points} level={level} setCurrentScreen={setCurrentScreen} />;
     }
   };
 
@@ -44,17 +46,91 @@ export default function GermanFlashcardApp() {
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
-    <SafeAreaView style={styles.container}>
-      {renderScreen()}
-      <NavBar active={currentScreen} setCurrentScreen={setCurrentScreen} />
-    </SafeAreaView>
-    </KeyboardAvoidingView>
+        <SafeAreaView style={styles.container}>
+          {renderScreen()}
+          <NavBar active={currentScreen} setCurrentScreen={setCurrentScreen} />
+        </SafeAreaView>
+      </KeyboardAvoidingView>
     </SafeAreaProvider>
   );
 }
 
-// Front Screen Component
-function FrontScreen({ points, setCurrentScreen }) {
+// Home Screen Component
+function HomeScreen({ points, level, setCurrentScreen }) {
+  const lessons = [
+    { id: 1, title: 'Basic Sentence Structure', level: 'Beginner', progress: 75, color: '#6B46C1' },
+    { id: 2, title: 'Time and Place Adverbs', level: 'Beginner', progress: 50, color: '#4299E1' },
+    { id: 3, title: 'German Cases', level: 'Intermediate', progress: 30, color: '#10B981' },
+    { id: 4, title: 'Verb Conjugation', level: 'Beginner', progress: 90, color: '#F59E0B' },
+    { id: 5, title: 'Modal Verbs', level: 'Intermediate', progress: 0, color: '#EF4444' },
+    { id: 6, title: 'Subordinate Clauses', level: 'Advanced', progress: 0, color: '#8B5CF6' },
+  ];
+
+  return (
+    <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+      {/* Header */}
+      <View style={styles.header}>
+        <View>
+          <Text style={styles.headerTitle}>Welcome Back!</Text>
+          <Text style={styles.headerSubtitle}>Level {level} • {points} pts</Text>
+        </View>
+      </View>
+
+      {/* Daily Goal */}
+      <View style={styles.dailyGoalBox}>
+        <Text style={styles.dailyGoalTitle}>Daily Goal</Text>
+        <Text style={styles.dailyGoalText}>Complete 3 lessons today</Text>
+        <View style={styles.progressBarContainer}>
+          <View style={[styles.progressBar, { width: '66%', backgroundColor: '#6B46C1' }]} />
+        </View>
+        <Text style={styles.dailyGoalProgress}>2 of 3 completed</Text>
+      </View>
+
+      {/* Lessons Section */}
+      <Text style={styles.sectionTitle}>Your Lessons</Text>
+
+      {lessons.map((lesson) => (
+        <TouchableOpacity
+          key={lesson.id}
+          style={styles.lessonCard}
+          onPress={() => setCurrentScreen('cards')}
+        >
+          <View style={[styles.lessonColorBar, { backgroundColor: lesson.color }]} />
+          <View style={styles.lessonContent}>
+            <View style={styles.lessonHeader}>
+              <Text style={styles.lessonTitle}>{lesson.title}</Text>
+              <Text style={[styles.lessonLevel, { color: lesson.color }]}>{lesson.level}</Text>
+            </View>
+            <View style={styles.lessonProgressContainer}>
+              <View style={styles.lessonProgressBar}>
+                <View style={[styles.progressBar, { width: `${lesson.progress}%`, backgroundColor: lesson.color }]} />
+              </View>
+              <Text style={styles.lessonProgressText}>{lesson.progress}%</Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+      ))}
+
+      <View style={{ height: 20 }} />
+    </ScrollView>
+  );
+}
+
+// Cards Screen Component (contains both Front and Back)
+function CardsScreen({ currentCard, setCurrentCard, level, setPoints, points }) {
+  return (
+    <View style={styles.container}>
+      {currentCard === 'front' ? (
+        <FrontCard setCurrentCard={setCurrentCard} points={points} />
+      ) : (
+        <BackCard setCurrentCard={setCurrentCard} level={level} setPoints={setPoints} points={points} />
+      )}
+    </View>
+  );
+}
+
+// Front Card Component
+function FrontCard({ setCurrentCard, points }) {
   const words = [
     { word: 'Tomorrow', type: 'Adverb', color: '#F6AD55' },
     { word: 'drive', type: 'Verb', color: '#FC8181' },
@@ -97,7 +173,7 @@ function FrontScreen({ points, setCurrentScreen }) {
       {/* Analysis Box */}
       <View style={styles.analysisBox}>
         <Text style={styles.analysisTitle}>Analyse the sentence</Text>
-        
+
         <Text style={styles.analysisLabel}>Clause type:</Text>
         <View style={styles.dropdownPlaceholder}>
           <Text style={styles.dropdownText}>Main clause</Text>
@@ -140,7 +216,7 @@ function FrontScreen({ points, setCurrentScreen }) {
       </View>
 
       {/* Flip Button */}
-      <TouchableOpacity style={styles.flipButton} onPress={() => setCurrentScreen('back')}>
+      <TouchableOpacity style={styles.flipButton} onPress={() => setCurrentCard('back')}>
         <Text style={styles.flipButtonText}>🔄 Flip to Back</Text>
       </TouchableOpacity>
 
@@ -149,8 +225,8 @@ function FrontScreen({ points, setCurrentScreen }) {
   );
 }
 
-// Back Screen Component
-function BackScreen({ level, setPoints, points, setCurrentScreen }) {
+// Back Card Component
+function BackCard({ setCurrentCard, level, setPoints, points }) {
   const [isRecording, setIsRecording] = useState(false);
   const [recordFeedback, setRecordFeedback] = useState('');
   const [userAnswer, setUserAnswer] = useState('');
@@ -216,7 +292,7 @@ function BackScreen({ level, setPoints, points, setCurrentScreen }) {
         <Text style={styles.speechInstruction}>
           Press the record button and repeat the sentence.
         </Text>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={[styles.recordButton, isRecording && styles.recordButtonActive]}
           onPress={handleRecord}
           disabled={isRecording}
@@ -277,7 +353,7 @@ function BackScreen({ level, setPoints, points, setCurrentScreen }) {
           <TouchableOpacity style={styles.checkButton} onPress={handleCheckAnswer}>
             <Text style={styles.buttonText}>Check Answer</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.backToFrontButton} onPress={() => setCurrentScreen('front')}>
+          <TouchableOpacity style={styles.backToFrontButton} onPress={() => setCurrentCard('front')}>
             <Text style={styles.backToFrontText}>Back to Front</Text>
           </TouchableOpacity>
         </View>
@@ -347,11 +423,6 @@ function AchievementsScreen({ setCurrentScreen }) {
         </View>
       </View>
 
-      {/* Back Button */}
-      <TouchableOpacity style={styles.backButtonLarge} onPress={() => setCurrentScreen('front')}>
-        <Text style={styles.buttonText}>← Back to Front</Text>
-      </TouchableOpacity>
-
       <View style={{ height: 20 }} />
     </ScrollView>
   );
@@ -361,23 +432,23 @@ function AchievementsScreen({ setCurrentScreen }) {
 function NavBar({ active, setCurrentScreen }) {
   return (
     <View style={styles.navBar}>
-      <TouchableOpacity 
-        style={[styles.navButton, active === 'front' && styles.navButtonActive]}
-        onPress={() => setCurrentScreen('front')}
+      <TouchableOpacity
+        style={[styles.navButton, active === 'home' && styles.navButtonActive]}
+        onPress={() => setCurrentScreen('home')}
       >
-        <Text style={styles.navButtonText}>⚡{'\n'}Front</Text>
+        <Text style={styles.navButtonText}>Home</Text>
       </TouchableOpacity>
-      <TouchableOpacity 
-        style={[styles.navButton, active === 'back' && styles.navButtonActive]}
-        onPress={() => setCurrentScreen('back')}
+      <TouchableOpacity
+        style={[styles.navButton, active === 'cards' && styles.navButtonActive]}
+        onPress={() => setCurrentScreen('cards')}
       >
-        <Text style={styles.navButtonText}>📚{'\n'}Back</Text>
+        <Text style={styles.navButtonText}>Cards</Text>
       </TouchableOpacity>
-      <TouchableOpacity 
+      <TouchableOpacity
         style={[styles.navButton, active === 'achievements' && styles.navButtonActive]}
         onPress={() => setCurrentScreen('achievements')}
       >
-        <Text style={styles.navButtonText}>🏆{'\n'}Achievements</Text>
+        <Text style={styles.navButtonText}>Achievements</Text>
       </TouchableOpacity>
     </View>
   );
@@ -405,6 +476,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  headerSubtitle: {
+    color: '#E9D5FF',
+    fontSize: 12,
+    marginTop: 2,
+  },
   headerTitleLarge: {
     color: '#FFFFFF',
     fontSize: 22,
@@ -415,12 +491,99 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
   },
+  dailyGoalBox: {
+    backgroundColor: '#F7FAFC',
+    margin: 15,
+    padding: 15,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+  },
+  dailyGoalTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#2D3748',
+    marginBottom: 5,
+  },
+  dailyGoalText: {
+    fontSize: 13,
+    color: '#718096',
+    marginBottom: 10,
+  },
+  dailyGoalProgress: {
+    fontSize: 11,
+    color: '#718096',
+    marginTop: 5,
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    color: '#2D3748',
+  },
+  lessonCard: {
+    backgroundColor: '#FFFFFF',
+    marginHorizontal: 15,
+    marginBottom: 12,
+    borderRadius: 12,
+    flexDirection: 'row',
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    overflow: 'hidden',
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+  },
+  lessonColorBar: {
+    width: 6,
+  },
+  lessonContent: {
+    flex: 1,
+    padding: 15,
+  },
+  lessonHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  lessonTitle: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: '#2D3748',
+    flex: 1,
+  },
+  lessonLevel: {
+    fontSize: 11,
+    fontWeight: 'bold',
+    marginLeft: 10,
+  },
+  lessonProgressContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  lessonProgressBar: {
+    flex: 1,
+    height: 6,
+    backgroundColor: '#E2E8F0',
+    borderRadius: 3,
+    marginRight: 10,
+    overflow: 'hidden',
+  },
+  lessonProgressText: {
+    fontSize: 12,
+    color: '#718096',
+    fontWeight: 'bold',
+    minWidth: 35,
+  },
   sentenceContainer: {
     padding: 20,
     alignItems: 'center',
   },
   sentenceText: {
-    fontFamily: 'Nunito-Bold',
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',
@@ -460,7 +623,6 @@ const styles = StyleSheet.create({
     minHeight: 60,
   },
   wordText: {
-    fontFamily: 'Nunito-Bold',
     fontSize: 10,
     fontWeight: 'bold',
     color: '#FFFFFF',
@@ -544,12 +706,6 @@ const styles = StyleSheet.create({
     margin: 10,
     padding: 15,
     borderRadius: 8,
-  },
-  sectionTitle: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    color: '#4A5568',
   },
   germanWordGrid: {
     flexDirection: 'row',
@@ -782,35 +938,30 @@ const styles = StyleSheet.create({
     height: '100%',
     borderRadius: 4,
   },
-  backButtonLarge: {
-    backgroundColor: '#6B46C1',
-    padding: 15,
-    margin: 10,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
   navBar: {
     flexDirection: 'row',
     backgroundColor: '#FFFFFF',
     borderTopWidth: 1,
     borderTopColor: '#E2E8F0',
-    paddingVertical: 5,
+    paddingVertical: 8,
+    paddingHorizontal: 10,
   },
   navButton: {
     flex: 1,
-    padding: 10,
+    padding: 12,
     alignItems: 'center',
-    backgroundColor: '#A0AEC0',
-    margin: 5,
+    justifyContent: 'center',
+    backgroundColor: '#F7FAFC',
+    marginHorizontal: 4,
     borderRadius: 8,
   },
   navButtonActive: {
     backgroundColor: '#6B46C1',
   },
   navButtonText: {
-    color: '#FFFFFF',
-    fontSize: 10,
+    color: '#718096',
+    fontSize: 12,
     textAlign: 'center',
-    fontWeight: 'bold',
+    fontWeight: '600',
   },
 });
