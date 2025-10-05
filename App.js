@@ -1,3 +1,4 @@
+// App.js - German Flashcard App for React Native
 import React, { useState } from 'react';
 import {
   View,
@@ -381,12 +382,21 @@ function BackCard({ setCurrentCard, level, setPoints, points }) {
 
 // Achievements Screen Component
 function AchievementsScreen({ setCurrentScreen }) {
+  const [selectedAchievement, setSelectedAchievement] = useState(null);
+
   const achievements = [
-    { icon: '🏆', title: 'Word Master', desc: 'Translate 50 words', color: '#FFD700' },
-    { icon: '✅', title: 'Grammar Guru', desc: '90% accuracy', color: '#10B981' },
-    { icon: '⚡', title: 'Speed Demon', desc: 'Lesson in 2 mins', color: '#FF4500' },
-    { icon: '🎓', title: 'Language Learner', desc: '10 lessons done', color: '#6B46C1' }
+    { id: 1, icon: 'trophy.png', title: 'Word Master', desc: 'Translate 50 words', color: '#FFD700' },
+    { id: 2, icon: 'checkmark.png', title: 'Grammar Guru', desc: '90% accuracy', color: '#10B981' },
+    { id: 3, icon: 'lightning.png', title: 'Speed Demon', desc: 'Lesson in 2 mins', color: '#FF4500' },
+    { id: 4, icon: 'graduation.png', title: 'Language Learner', desc: '10 lessons done', color: '#6B46C1' }
   ];
+
+  const handleAchievementPress = (achievementId) => {
+    setSelectedAchievement(achievementId);
+    setTimeout(() => {
+      setSelectedAchievement(null);
+    }, 3000);
+  };
 
   return (
     <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
@@ -399,12 +409,20 @@ function AchievementsScreen({ setCurrentScreen }) {
 
       {/* Achievements Grid */}
       <View style={styles.achievementsGrid}>
-        {achievements.map((item, index) => (
-          <View key={index} style={styles.achievementCard}>
-            <Text style={[styles.achievementIcon, { color: item.color }]}>{item.icon}</Text>
-            <Text style={styles.achievementTitle}>{item.title}</Text>
-            <Text style={styles.achievementDesc}>{item.desc}</Text>
-          </View>
+        {achievements.map((item) => (
+          <TouchableOpacity
+            key={item.id}
+            style={styles.achievementCard}
+            onPress={() => handleAchievementPress(item.id)}
+            activeOpacity={0.7}
+          >
+            <View style={[styles.achievementIconContainer, { backgroundColor: item.color }]}>
+              <Image source={require(`./assets/${item.icon}`)} style={{ width: 40, height: 40 }} />
+            </View>
+            <Text style={styles.achievementTitle}>
+              {selectedAchievement === item.id ? item.desc : item.title}
+            </Text>
+          </TouchableOpacity>
         ))}
       </View>
 
@@ -436,19 +454,19 @@ function NavBar({ active, setCurrentScreen }) {
         style={[styles.navButton, active === 'home' && styles.navButtonActive]}
         onPress={() => setCurrentScreen('home')}
       >
-        <Text style={styles.navButtonText}>Home</Text>
+        <Text style={[styles.navButtonText, active === 'home' && { color: '#FFFFFF' }]}>Home</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={[styles.navButton, active === 'cards' && styles.navButtonActive]}
         onPress={() => setCurrentScreen('cards')}
       >
-        <Text style={styles.navButtonText}>Cards</Text>
+        <Text style={[styles.navButtonText, active === 'cards' && { color: '#FFFFFF' }]}>Cards</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={[styles.navButton, active === 'achievements' && styles.navButtonActive]}
         onPress={() => setCurrentScreen('achievements')}
       >
-        <Text style={styles.navButtonText}>Achievements</Text>
+        <Text style={[styles.navButtonText, active === 'achievements' && { color: '#FFFFFF' }]}>Achievements</Text>
       </TouchableOpacity>
     </View>
   );
