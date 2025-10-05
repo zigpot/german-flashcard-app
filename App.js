@@ -1,4 +1,3 @@
-// App.js - German Flashcard App for React Native
 import React, { useState } from 'react';
 import {
   View,
@@ -384,6 +383,17 @@ function BackCard({ setCurrentCard, level, setPoints, points }) {
 function AchievementsScreen({ setCurrentScreen }) {
   const [selectedAchievement, setSelectedAchievement] = useState(null);
 
+  // Image mapping - when you have actual assets, import them at the top and map here
+  // import trophyIcon from './assets/trophy.png';
+  // import checkmarkIcon from './assets/checkmark.png';
+  // etc.
+  const imageMap = {
+    'trophy.png': null, // Replace with: trophyIcon
+    'checkmark.png': null, // Replace with: checkmarkIcon
+    'lightning.png': null, // Replace with: lightningIcon
+    'graduation.png': null, // Replace with: graduationIcon
+  };
+
   const achievements = [
     { id: 1, icon: 'trophy.png', title: 'Word Master', desc: 'Translate 50 words', color: '#FFD700' },
     { id: 2, icon: 'checkmark.png', title: 'Grammar Guru', desc: '90% accuracy', color: '#10B981' },
@@ -417,7 +427,10 @@ function AchievementsScreen({ setCurrentScreen }) {
             activeOpacity={0.7}
           >
             <View style={[styles.achievementIconContainer, { backgroundColor: item.color }]}>
-              <Image source={require(`./assets/${item.icon}`)} style={{ width: 40, height: 40 }} />
+              {/* For now showing placeholder text, replace with:
+                  <Image source={imageMap[item.icon]} style={{ width: 40, height: 40 }} resizeMode="contain" />
+              */}
+              <Text style={styles.achievementIconPlaceholder}>{item.icon.replace('.png', '')}</Text>
             </View>
             <Text style={styles.achievementTitle}>
               {selectedAchievement === item.id ? item.desc : item.title}
@@ -913,26 +926,33 @@ const styles = StyleSheet.create({
   achievementCard: {
     backgroundColor: '#F7FAFC',
     width: (width - 40) / 2 - 5,
-    padding: 15,
-    borderRadius: 8,
+    padding: 20,
+    borderRadius: 12,
     marginBottom: 10,
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
   },
-  achievementIcon: {
-    fontSize: 36,
-    marginBottom: 5,
+  achievementIconContainer: {
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 12,
   },
-  achievementTitle: {
-    fontSize: 13,
+  achievementIconPlaceholder: {
+    fontSize: 11,
+    color: '#FFFFFF',
     fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: 5,
-    color: '#2D3748',
   },
-  achievementDesc: {
-    fontSize: 10,
+  achievementTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
     textAlign: 'center',
-    color: '#718096',
+    color: '#2D3748',
+    minHeight: 40,
   },
   progressBox: {
     backgroundColor: '#F7FAFC',
