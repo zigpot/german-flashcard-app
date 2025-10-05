@@ -427,9 +427,7 @@ function AchievementsScreen({ setCurrentScreen }) {
             activeOpacity={0.7}
           >
             <View style={[styles.achievementIconContainer, { backgroundColor: item.color }]}>
-              {/* For now showing placeholder text, replace with:
-                  <Image source={imageMap[item.icon]} style={{ width: 40, height: 40 }} resizeMode="contain" />
-              */}
+              <Image source={imageMap[item.icon]} style={{ width: 40, height: 40 }} resizeMode="contain" />
               <Text style={styles.achievementIconPlaceholder}>{item.icon.replace('.png', '')}</Text>
             </View>
             <Text style={styles.achievementTitle}>
