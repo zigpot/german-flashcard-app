@@ -8,8 +8,15 @@ import {
   StyleSheet,
   Dimensions,
   KeyboardAvoidingView,
-  Platform
+  Platform,
+  Image
 } from 'react-native';
+
+import trophyIcon from './assets/trophy.png';
+import checkmarkIcon from './assets/checkmark.png';
+import lightningIcon from './assets/lightning.png';
+import graduationIcon from './assets/graduation.png';
+
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 const { width } = Dimensions.get('window');
@@ -388,10 +395,10 @@ function AchievementsScreen({ setCurrentScreen }) {
   // import checkmarkIcon from './assets/checkmark.png';
   // etc.
   const imageMap = {
-    'trophy.png': null, // Replace with: trophyIcon
-    'checkmark.png': null, // Replace with: checkmarkIcon
-    'lightning.png': null, // Replace with: lightningIcon
-    'graduation.png': null, // Replace with: graduationIcon
+    'trophy.png': trophyIcon, // Replace with: trophyIcon
+    'checkmark.png': checkmarkIcon, // Replace with: checkmarkIcon
+    'lightning.png': lightningIcon, // Replace with: lightningIcon
+    'graduation.png': graduationIcon, // Replace with: graduationIcon
   };
 
   const achievements = [
